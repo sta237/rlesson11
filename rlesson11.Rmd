@@ -1,0 +1,96 @@
+---
+title: "Lecture 10: Law of Large Numbers"
+output: 
+  learnr::tutorial:
+    css: css/styles.css
+runtime: shiny_prerendered
+---
+
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+```
+
+
+## Central Limit Theorem
+
+For each random variable below, generate 10,000 simulations of $\overline{X}_{10}$, $\overline{X}_{20}$, $\overline{X}_{30}$, and $\overline{X}_{50}$, where $\overline{X}$ is the average of $n$ independent samples of $X$. Compare their density histograms with the density function of $N(E[X], \text{Var}(X)/\sqrt{n})$.
+
+### Normal Distrbution
+
+$$X\sim N(5, 5^2)$$
+
+```{r echo=FALSE}
+ggplot() +
+  theme_classic() +
+  geom_function(fun = dnorm, args = list(mean = 5, sd = 5)) +
+  scale_x_continuous(limits = c(-20, 30)) +
+  labs(y = "f", title = "Probability density funtion of N(5,25)")
+```
+
+
+```{r norm, exercise=TRUE, exercise.lines=20}
+n <- 10000
+xbar10 <- replicate(n, mean(rnorm(10, 5, 5)))
+```
+
+
+### Exponential Distribution
+
+$$X\sim \text{Exp}\left(1/5\right)$$
+
+```{r echo=FALSE}
+ggplot() +
+  theme_classic() +
+  geom_function(fun = dexp, args = list(rate = 0.2)) +
+  scale_x_continuous(limits = c(0, 30)) +
+  labs(y = "f", title = "Probability density funtion of Exp(1/5)")
+```
+
+
+```{r exp, exercise=TRUE, exercise.lines=20}
+n <- 10000
+xbar10 <- replicate(n, mean(rexp(10, 1/5)))
+```
+
+
+
+### Binomial Distribution
+
+$$X\sim \text{Binom}\left(10, 1/10\right)$$
+
+```{r echo=FALSE}
+r <- 0:10
+db <- dbinom(r, 10, 1/10)
+ggplot() +
+  theme_classic() +
+  geom_segment(aes(x = c(-1, r), xend = c(r, 11), y = c(0, db), yend = c(0, db))) +
+  labs(y = "p", title = "Probability mass funtion of Binom(10, 1/10)")
+```
+
+```{r binom, exercise=TRUE, exercise.lines=20}
+n <- 10000
+xbar10 <- replicate(n, mean(rbinom(10, 10, 1/10)))
+```
+
+
+### Poisson Distribution
+
+$$X\sim \text{Pois}\left(10\right)$$
+
+```{r echo=FALSE}
+r <- 0:50
+db <- dpois(r, 10)
+ggplot() +
+  theme_classic() +
+  geom_segment(aes(x = c(-1, r), xend = c(r, 51), y = c(0, db), yend = c(0, db))) +
+  labs(y = "p", title = "Probability mass funtion of Pois(10)")
+```
+
+```{r pois, exercise=TRUE, exercise.lines=20}
+n <- 10000
+xbar10 <- replicate(n, mean(rpois(10, 10)))
+```
